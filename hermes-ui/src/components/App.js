@@ -1,9 +1,50 @@
 import React, { Component } from 'react';
-// import logo from '../css/logo.svg';
+
+import RecorderBox from './RecorderBox';
 import '../css/App.css';
 
+var popsicle = require('popsicle'); 
+
+// const AudioContext = window.AudioContext || window.webkitAudioContext;
+// const audioCtx = new AudioContext();
+
 class App extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      command: 'none',
+    }
+  }
+
+  makeAPICallWithCallback(method, url, body, headers, callBack) {
+    popsicle.request({
+      method: method,
+      url: url,
+      body: body,
+      headers: headers,
+      options: { rejectUnauthorized: false }
+    })
+    .then((res) => { callBack(res); })
+  }
+
+  sendAudioRecordingRequest(blob) {
+    console.log(blob);
+
+    // var method = "POST";
+    // var url = "";
+    // var body = {};
+    // var headers = {};
+    // var callBack = (res) => {
+    //   console.log("received from sendAudioRecordingRequest()");  
+    //   console.log(res.body);   
+    //   // this.setState({: JSON.parse(res.body)});
+    // };
+    // this.makeAPICallWithCallback(method, url, body, headers, callBack);
+  }
+
   render() {
+
     return (
       <div className="app-container">
         <div className="ui grid">
@@ -84,28 +125,21 @@ class App extends Component {
         </div>
 
         <div className="watson-container">
-        <div className="ui raised fluid segment">
-        <div className="watson-button-container">
-        <button className="ui blue huge circular icon button">
-          <i className="large white tasks icon"></i>
-        </button>
-        </div>
-        </div>
+          <div className="ui raised fluid segment">
+            <RecorderBox 
+              command={this.state.command}
+              setRecorderToStart={() => {
+                  this.setState({command: 'start'});
+                }}
+              setRecorderToStop={() => {
+                  this.setState({command: 'stop'});
+                }}
+              sendAudioRecordingRequest={this.sendAudioRecordingRequest}
+            />
+          </div>
         </div>
       </div>
     );
-
-    // return (
-    //   <div className="App">
-    //     <div className="App-header">
-    //       <img src={logo} className="App-logo" alt="logo" />
-    //       <h2>Welcome to React</h2>
-    //     </div>
-    //     <p className="App-intro">
-    //       To get started, edit <code>src/App.js</code> and save to reload.
-    //     </p>
-    //   </div>
-    // );
   }
 }
 
