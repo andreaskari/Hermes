@@ -1,6 +1,33 @@
+.app-container {
+  margin-right: 40px;
+  margin-left: 40px;
+}
+
 .site-title {
-  /*padding: 10px;*/
+  padding: 10px;
   /*height: 100px;*/
   /*width: 100%;*/
   text-align: center;
+}
+
+.website-name {
+  font-size: 50px;
+}
+
+.needs-padding {
+  margin: 20px;
+}
+
+.watson-container {
+  position: absolute;
+  transform: translate(-50%,-100%);
+  left: 50%;
+  top: 100%;
+  width: 100%;
+}
+
+.watson-button-container {
+  position: relative;
+  left: 50%;
+  /*transform: translate(-50%,-50%);*/
 }
