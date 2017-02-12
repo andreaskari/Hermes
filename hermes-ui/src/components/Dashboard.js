@@ -70,6 +70,7 @@ export default class Dashboard extends Component {
       // device = this.state.activeDeviceDisplayed.name;
       var length = this.state.activeDeviceDisplayed.data.length;
       var amount = Math.min(length, 5);
+      console.log(this.state.activeDeviceDisplayed.data.slice(length - amount, length));
       device = (
         <div className="ui stacked fluid segment">
           <h2 className="ui header">
@@ -88,7 +89,7 @@ export default class Dashboard extends Component {
               </tr>
             </thead>
             <tbody>
-              {this.state.activeDeviceDisplayed.data.splice(length - amount, length).map(this.getRowHTML)}
+              {this.state.activeDeviceDisplayed.data.slice(length - amount, length).map(this.getRowHTML)}
             </tbody>
           </table>
         </div>

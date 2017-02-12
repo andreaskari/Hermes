@@ -30,7 +30,7 @@ class App extends Component {
 
   startTimer() {
     console.log("DeviceTable: startTimer()");
-    this.timer = setInterval(this.getBackEndState.bind(this), 5000);
+    this.timer = setInterval(this.getBackEndState.bind(this), 1000);
   }
 
   stopTimer() {
@@ -60,31 +60,27 @@ class App extends Component {
     var callBack = (res) => {
       console.log("received from getBackEndState()");  
       console.log(res.body);
+      var activeDevice = null;
       var result = JSON.parse(res.body);
-      this.setState({devices: result['devices'], shoppingcart: result['shoppingcart']});
+      result['devices'].forEach((device) => {
+        if (this.state.activeDeviceDisplayed != null && device.name === this.state.activeDeviceDisplayed.name) {
+          activeDevice = device;
+        }
+      })
+      this.setState({
+        devices: result['devices'], 
+        shoppingcart: result['shoppingcart'],
+        activeDeviceDisplayed: activeDevice,
+      });
     };
     this.makeAPICallWithCallback(method, url, body, headers, callBack);
   }
-
-  // getTranslation() {
-  //   var method = "GET";
-  //   var url = "http://127.0.0.1:5000/getAudioTranslation/";
-  //   var body = {};
-  //   var headers = {};
-  //   var callBack = (res) => {
-  //     console.log("received from getTranslation()");  
-  //     console.log(res.body);
-  //     var result = JSON.parse(res.body);
-  //     this.setState({translation: result});
-  //   };
-  //   this.makeAPICallWithCallback(method, url, body, headers, callBack);
-  // }
 
   sendAudioRecordingRequest(blob) {
     console.log(blob);
 
     var method = "POST";
-    var url = "http://127.0.0.1:5000/getAudioTranslation/";
+    var url = "http://127.0.0.1:5000/postAudio/";
     var body = {blob: blob};
     var headers = {};
     var callBack = (res) => {

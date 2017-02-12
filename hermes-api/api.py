@@ -1,7 +1,7 @@
 import json
 import pickle
 import random
-from flask import Flask
+from flask import Flask, request
 from flask_cors import CORS, cross_origin
 from PIL import Image
 import os
@@ -35,7 +35,7 @@ def reset_state():
     save_obj(state)
 
 
-# reset_state()
+reset_state()
 # exit()
 
 @app.route("/")
@@ -97,29 +97,47 @@ def get_audio_translation():
 def post_audio():
     content = request.get_json(silent=True)
     print(content)
-    # wordsList = []
-    # jsonWords = []
-    # finalList = []
-    # sentence = ""
-    # speech_to_text = SpeechToTextV1(
-    #     username='e4343ecb-674a-4078-86ae-93c6d4ca8794',
-    #     password='UtIVwPnZR3qv',
-    #     x_watson_learning_opt_out=False
-    # )
+    
+    objectList = ['refrigerator', 'printer', 'coffee']
+    commandList = ['status', 'buy', 'purchase', 'order', 'add', 'cart']
 
-    # print(json.dumps(speech_to_text.models(), indent=2))
+    wordsList = []
+    jsonWords = []
+    finalList = []
+    sentence = ""
+    speech_to_text = SpeechToTextV1(
+        username='e4343ecb-674a-4078-86ae-93c6d4ca8794',
+        password='UtIVwPnZR3qv',
+        x_watson_learning_opt_out=False
+    )
 
-    # print(json.dumps(speech_to_text.get_model('en-US_BroadbandModel'), indent=2))
+    print(json.dumps(speech_to_text.models(), indent=2))
 
-    # with open(join(dirname(__file__), '/Users/Attari/Desktop/Hermes/practice.wav'), 'rb') as audio_file:
-    #     text_dict = speech_to_text.recognize(
-    #         audio_file, content_type='audio/wav', timestamps=True,
-    #         word_confidence=True)
-    #     wordsList = text_dict['results'][0]['alternatives'][0]['word_confidence']
-    #     for lists in wordsList:
-    #         jsonWords.append(lists[0])
-    #         #sentence += lists[0] + " "
-    #     finalList = json.dumps(jsonWords)
+    print(json.dumps(speech_to_text.get_model('en-US_BroadbandModel'), indent=2))
+
+    with open(join(dirname(__file__), '/Users/andreaskarinam/Desktop/response.wav'), 'rb') as audio_file:
+        text_dict = speech_to_text.recognize(
+            audio_file, content_type='audio/wav', timestamps=True,
+            word_confidence=True)
+        wordsList = text_dict['results'][0]['alternatives'][0]['word_confidence']
+        for lists in wordsList:
+            jsonWords.append(lists[0])
+
+    print(jsonWords)
+    for word in jsonWords:
+        if(word in commandList):
+            print(word)
+
+    for word in jsonWords:
+        if(word in objectList):
+            print(word)
+
+    state = load_obj()
+    data = state["devices"][0]["data"]
+    state["shoppingcart"] = []
+    save_obj(state)
+    return json.dumps(state)
+
     return json.dumps({"response": 200})
 
 if __name__ == "__main__":
