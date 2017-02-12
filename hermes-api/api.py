@@ -119,8 +119,6 @@ def post_audio():
     data = state["devices"][0]["data"]
     state["shoppingcart"] = []
     save_obj(state)
-    return json.dumps(state)
-
     return json.dumps({"response": 200})
 
 if __name__ == "__main__":
