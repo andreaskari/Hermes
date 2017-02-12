@@ -1,4 +1,5 @@
 import json
+import pickle
 from flask import Flask
 from flask_cors import CORS, cross_origin
 from PIL import Image
@@ -7,6 +8,29 @@ from os.path import isfile, join
 
 app = Flask(__name__)
 CORS(app)
+
+def save_obj(state):
+    with open('state.pkl', 'wb') as f:
+        pickle.dump(state, f, pickle.HIGHEST_PROTOCOL)
+
+def load_obj():
+    with open('state.pkl', 'rb') as f:
+        return pickle.load(f)
+
+def reset_state():
+    state = {
+        "devices": [
+            {"name": "3D Printer", "status": "Currently Printing", "data": []},
+            {"name": "Refrigerator", "status": "On", "data": []},
+            {"name": "Coffee Machine", "status": "Producing Coffee", "data": []},
+        ],
+        "shoppingcart": [],
+    }
+    save_obj(state)
+
+
+# reset_state()
+# exit()
 
 @app.route("/")
 def home():
@@ -34,14 +58,8 @@ def home():
 
 @app.route("/getAllInfo/")
 def get_all_info():
-    path = 'imgs/Packages/'
-    group_list = {}
-    print(os.listdir(path))
-    for group in os.listdir(path):
-        if (group[0] != '.'):
-            img_list = [img for img in os.listdir(path + group + "/") if img[0] != '.']
-            group_list[group] = img_list
-    return json.dumps(group_list)
+    state = load_obj()
+    return json.dumps(state)
 
 
 @app.route('/getAudioTranslation/')
@@ -59,6 +77,12 @@ def get_audio_translation():
 
     pixels_dict = {"width": width, "height": height, "matrix": pixel_matrix}
     return json.dumps(pixels_dict)
+
+@app.route('/postAudio/', methods=['POST'])
+def post_audio():
+    content = request.get_json(silent=True)
+    print(content)
+    return uuid
 
 if __name__ == "__main__":
     app.run()

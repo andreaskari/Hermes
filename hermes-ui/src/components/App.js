@@ -16,6 +16,9 @@ class App extends Component {
     super(props);
 
     this.state = {
+      devices: null,
+      shoppingcart: null,
+      translation: null,
       command: 'none',
       activeDeviceDisplayed: null,
       activeMenuOption: 'Dashboard',
@@ -31,6 +34,34 @@ class App extends Component {
       options: { rejectUnauthorized: false }
     })
     .then((res) => { callBack(res); })
+  }
+
+  getBackEndState() {
+    var method = "GET";
+    var url = "http://127.0.0.1:5000/getAllInfo/";
+    var body = {};
+    var headers = {};
+    var callBack = (res) => {
+      console.log("received from getBackEndState()");  
+      console.log(res.body);
+      var result = JSON.parse(res.body);
+      this.setState({devices: result['devices'], shoppingcart: result['shoppingcart']});
+    };
+    this.makeAPICallWithCallback(method, url, body, headers, callBack);
+  }
+
+  getTranslation() {
+    var method = "GET";
+    var url = "http://127.0.0.1:5000/getAudioTranslation/";
+    var body = {};
+    var headers = {};
+    var callBack = (res) => {
+      console.log("received from getTranslation()");  
+      console.log(res.body);
+      var result = JSON.parse(res.body);
+      this.setState({translation: result['devices'], shoppingcart: result['shoppingcart']});
+    };
+    this.makeAPICallWithCallback(method, url, body, headers, callBack);
   }
 
   sendAudioRecordingRequest(blob) {
