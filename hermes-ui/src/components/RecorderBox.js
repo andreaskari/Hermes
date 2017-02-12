@@ -11,6 +11,10 @@ export default class RecorderBox extends Component {
     };
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    return (nextProps.command !== this.state.command);
+  }
+
   componentWillReceiveProps(nextProps) {
     this.setState({
       command: nextProps.command,
