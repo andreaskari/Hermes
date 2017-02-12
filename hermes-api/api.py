@@ -76,23 +76,6 @@ def get_all_info():
     save_obj(state)
     return json.dumps(state)
 
-
-@app.route('/getAudioTranslation/')
-def get_audio_translation():
-    img = Image.open('imgs/Packages/' + group + "/" + image, 'r')
-    pixel_list = list(img.getdata())
-    # print(pixel_list)
-    width, height = img.size
-    pixel_matrix = []
-    for y in range(height):
-        pixel_matrix.append(pixel_list[y * width : (y+1) * width])
-    print("height {} should be {}".format(height, len(pixel_matrix)))
-    print("width {} should be {}".format(width, len(pixel_matrix[0])))
-    # print(pixel_matrix)
-
-    pixels_dict = {"width": width, "height": height, "matrix": pixel_matrix}
-    return json.dumps(pixels_dict)
-
 @app.route('/postAudio/', methods=['GET', 'POST'])
 def post_audio():
     content = request.get_json(silent=True)
