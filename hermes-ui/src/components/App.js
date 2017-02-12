@@ -18,10 +18,26 @@ class App extends Component {
     this.state = {
       devices: null,
       shoppingcart: null,
-      translation: null,
       command: 'none',
       activeDeviceDisplayed: null,
       activeMenuOption: 'Dashboard',
+    }
+  }
+
+  componentDidMount() {
+    this.startTimer();
+  }
+
+  startTimer() {
+    console.log("DeviceTable: startTimer()");
+    this.timer = setInterval(this.getBackEndState.bind(this), 500);
+  }
+
+  stopTimer() {
+    if (this.timer) {
+      console.log("DeviceTable: stopTimer()");
+      clearInterval(this.timer);
+      this.timer = null;
     }
   }
 
@@ -50,19 +66,19 @@ class App extends Component {
     this.makeAPICallWithCallback(method, url, body, headers, callBack);
   }
 
-  getTranslation() {
-    var method = "GET";
-    var url = "http://127.0.0.1:5000/getAudioTranslation/";
-    var body = {};
-    var headers = {};
-    var callBack = (res) => {
-      console.log("received from getTranslation()");  
-      console.log(res.body);
-      var result = JSON.parse(res.body);
-      this.setState({translation: result['devices'], shoppingcart: result['shoppingcart']});
-    };
-    this.makeAPICallWithCallback(method, url, body, headers, callBack);
-  }
+  // getTranslation() {
+  //   var method = "GET";
+  //   var url = "http://127.0.0.1:5000/getAudioTranslation/";
+  //   var body = {};
+  //   var headers = {};
+  //   var callBack = (res) => {
+  //     console.log("received from getTranslation()");  
+  //     console.log(res.body);
+  //     var result = JSON.parse(res.body);
+  //     this.setState({translation: result});
+  //   };
+  //   this.makeAPICallWithCallback(method, url, body, headers, callBack);
+  // }
 
   sendAudioRecordingRequest(blob) {
     console.log(blob);
@@ -87,7 +103,8 @@ class App extends Component {
     );
     if (this.state.activeMenuOption === 'Dashboard') {
       contentHTML = (
-        <Dashboard 
+        <Dashboard
+          devices={this.state.devices}
           activeDeviceDisplayed={this.state.activeDeviceDisplayed}
           setActiveDeviceDisplayed={(device) => {
             this.setState({activeDeviceDisplayed: device});
@@ -96,7 +113,9 @@ class App extends Component {
       );
     } else if (this.state.activeMenuOption === 'Shopping Cart') {
       contentHTML = (
-        <ShoppingCart />
+        <ShoppingCart 
+          shoppingcart={this.state.shoppingcart}
+        />
       );
     } 
 

@@ -7,28 +7,30 @@ export default class Dashboard extends Component {
     super(props);
 
     this.state = {
+      devices: props.devices,
       activeDeviceDisplayed: props.activeDeviceDisplayed,
     };
   }
 
   componentWillReceiveProps(nextProps) {
     this.setState({
+      devices: nextProps.devices,
       activeDeviceDisplayed: nextProps.activeDeviceDisplayed,
     });
   }
 
   getDeviceRowHTML(device) {
     var onClick = () => {
-      this.props.setActiveDeviceDisplayed(device);
+      this.props.setActiveDeviceDisplayed(device.name);
     };
 
     return (
-      <div className="sixteen wide column" key={device} onClick={onClick}>
+      <div className="sixteen wide column" key={device.name} onClick={onClick}>
         <div className="ui icon message">
           <i className="green circle icon"></i>
           <div className="content">
             <div className="header">
-              { device }
+              { device.name }
             </div>
             <p>Status: Active</p>
           </div>
@@ -39,12 +41,18 @@ export default class Dashboard extends Component {
 
   render() {
     // remember that activeDeviceDisplayed is null first
+    if (this.state.devices == null) {
+      return (
+        <div className="row">
+        </div>
+      );
+    }
 
     return (
       <div className="row">
         <div className="eight wide column">
           <div className="ui grid">
-            { DEVICES.map(this.getDeviceRowHTML.bind(this)) }
+            { this.state.devices.map(this.getDeviceRowHTML.bind(this)) }
           </div>
         </div>
         <div className="eight wide column">
