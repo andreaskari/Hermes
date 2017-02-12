@@ -30,7 +30,7 @@ class App extends Component {
 
   startTimer() {
     console.log("DeviceTable: startTimer()");
-    this.timer = setInterval(this.getBackEndState.bind(this), 500);
+    this.timer = setInterval(this.getBackEndState.bind(this), 5000);
   }
 
   stopTimer() {
@@ -83,16 +83,16 @@ class App extends Component {
   sendAudioRecordingRequest(blob) {
     console.log(blob);
 
-    // var method = "POST";
-    // var url = "";
-    // var body = {blob: blob};
-    // var headers = {};
-    // var callBack = (res) => {
-    //   console.log("received from sendAudioRecordingRequest()");  
-    //   console.log(res.body);   
-    //   // this.setState({: JSON.parse(res.body)});
-    // };
-    // this.makeAPICallWithCallback(method, url, body, headers, callBack);
+    var method = "POST";
+    var url = "http://127.0.0.1:5000/getAudioTranslation/";
+    var body = {blob: blob};
+    var headers = {};
+    var callBack = (res) => {
+      console.log("received from sendAudioRecordingRequest()");  
+      console.log(res.body);   
+      // this.setState({: JSON.parse(res.body)});
+    };
+    this.makeAPICallWithCallback(method, url, body, headers, callBack);
   }
 
   render() {
@@ -147,7 +147,7 @@ class App extends Component {
               setRecorderToStop={() => {
                 this.setState({command: 'stop'});
               }}
-              sendAudioRecordingRequest={this.sendAudioRecordingRequest}
+              sendAudioRecordingRequest={this.sendAudioRecordingRequest.bind(this)}
             />
           </div>
         </div>

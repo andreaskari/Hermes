@@ -13,12 +13,14 @@ export default class ShoppingCart extends Component {
     super(props);
 
     this.state = {
+      shoppingcart: props.shoppingcart,
       // activeDeviceDisplayed: props.activeDeviceDisplayed,
     };
   }
 
   componentWillReceiveProps(nextProps) {
     this.setState({
+      shoppingcart: nextProps.shoppingcart,
       // activeDeviceDisplayed: nextProps.activeDeviceDisplayed,
     });
   }
@@ -54,11 +56,17 @@ export default class ShoppingCart extends Component {
 
   render() {
     // remember that activeDeviceDisplayed is null first
+    if (this.state.shoppingcart == null) {
+      return (
+        <div className="sixteen wide column">
+        </div>
+      );
+    }
 
     return (
       <div className="sixteen wide column">
         <div className="ui grid">
-          { ITEMS.map(this.getItemRowHTML.bind(this)) }
+          { this.state.shoppingcart.map(this.getItemRowHTML.bind(this)) }
         </div>
       </div>
     );

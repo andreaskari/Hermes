@@ -1,10 +1,15 @@
 import json
 import pickle
+import random
 from flask import Flask
 from flask_cors import CORS, cross_origin
 from PIL import Image
 import os
-from os.path import isfile, join
+from os.path import isfile, join, dirname
+
+# import json
+# from os.path import join, dirname
+from watson_developer_cloud import SpeechToTextV1
 
 app = Flask(__name__)
 CORS(app)
@@ -20,11 +25,12 @@ def load_obj():
 def reset_state():
     state = {
         "devices": [
-            {"name": "3D Printer", "status": "Currently Printing", "data": []},
+            {"name": "3D Printer", "status": "Currently Printing", "data": [100.0]},
             {"name": "Refrigerator", "status": "On", "data": []},
-            {"name": "Coffee Machine", "status": "Producing Coffee", "data": []},
+            {"name": "Coffee Machine", "status": "Producing Coffee", "data": [2]},
         ],
         "shoppingcart": [],
+        "addedFilament": False,
     }
     save_obj(state)
 
@@ -59,6 +65,15 @@ def home():
 @app.route("/getAllInfo/")
 def get_all_info():
     state = load_obj()
+    data = state["devices"][0]["data"]
+    print(data)
+    print(len(data)-1)
+    last_point = data[len(data)-1]
+    if last_point < 80.0 and not state["addedFilament"]:
+        state["addedFilament"] = True
+        state["shoppingcart"].append({"name": "Red 3D Printing Filament", "quantity": 2, "price": "$79.98"})
+    state["devices"][0]["data"] = data + [last_point - random.random() * 2.0]
+    save_obj(state)
     return json.dumps(state)
 
 
@@ -78,11 +93,34 @@ def get_audio_translation():
     pixels_dict = {"width": width, "height": height, "matrix": pixel_matrix}
     return json.dumps(pixels_dict)
 
-@app.route('/postAudio/', methods=['POST'])
+@app.route('/postAudio/', methods=['GET', 'POST'])
 def post_audio():
     content = request.get_json(silent=True)
     print(content)
-    return uuid
+    # wordsList = []
+    # jsonWords = []
+    # finalList = []
+    # sentence = ""
+    # speech_to_text = SpeechToTextV1(
+    #     username='e4343ecb-674a-4078-86ae-93c6d4ca8794',
+    #     password='UtIVwPnZR3qv',
+    #     x_watson_learning_opt_out=False
+    # )
+
+    # print(json.dumps(speech_to_text.models(), indent=2))
+
+    # print(json.dumps(speech_to_text.get_model('en-US_BroadbandModel'), indent=2))
+
+    # with open(join(dirname(__file__), '/Users/Attari/Desktop/Hermes/practice.wav'), 'rb') as audio_file:
+    #     text_dict = speech_to_text.recognize(
+    #         audio_file, content_type='audio/wav', timestamps=True,
+    #         word_confidence=True)
+    #     wordsList = text_dict['results'][0]['alternatives'][0]['word_confidence']
+    #     for lists in wordsList:
+    #         jsonWords.append(lists[0])
+    #         #sentence += lists[0] + " "
+    #     finalList = json.dumps(jsonWords)
+    return json.dumps({"response": 200})
 
 if __name__ == "__main__":
     app.run()

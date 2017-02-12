@@ -46,7 +46,7 @@ export default class RecorderBox extends Component {
       <div className="watson-button-container">
         <Recorder 
           command={this.state.command}
-          onStop={ this.props.sendAudioRecordingRequest.bind(this) } 
+          onStop={ this.props.sendAudioRecordingRequest } 
           onMissingAPIs={ () => { console.log("onMissingAPIs FIRED"); } }
         />
         <button 
