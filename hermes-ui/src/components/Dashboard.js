@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+// import LineChart2 from './LineChart2';
 
 const DEVICES = ["3D Printer", "Refrigerator", "Coffee Machine"];
 
@@ -21,7 +22,7 @@ export default class Dashboard extends Component {
 
   getDeviceRowHTML(device) {
     var onClick = () => {
-      this.props.setActiveDeviceDisplayed(device.name);
+      this.props.setActiveDeviceDisplayed(device);
     };
 
     return (
@@ -39,6 +40,16 @@ export default class Dashboard extends Component {
     );
   }
 
+  getRowHTML(datapoint) {
+    return (
+      <tr key={datapoint}>
+        <td key={datapoint}>
+          {datapoint}
+        </td>
+      </tr>
+    );
+  }
+
   render() {
     // remember that activeDeviceDisplayed is null first
     if (this.state.devices == null) {
@@ -48,6 +59,43 @@ export default class Dashboard extends Component {
       );
     }
 
+    var device = (
+      <div className="ui stacked fluid segment">
+        <h2 className="ui header">
+          No Device Selected
+        </h2>
+      </div>
+    );
+    if (this.state.activeDeviceDisplayed != null) {
+      // device = this.state.activeDeviceDisplayed.name;
+      var length = this.state.activeDeviceDisplayed.data.length;
+      var amount = Math.min(length, 5);
+      device = (
+        <div className="ui stacked fluid segment">
+          <h2 className="ui header">
+            {this.state.activeDeviceDisplayed.name}
+          </h2>
+          <div className="ui info message">
+            <div className="header">
+              {this.state.activeDeviceDisplayed.status}
+            </div>
+            <p>Status</p>
+          </div>
+          <table className="ui celled table">
+            <thead>
+              <tr>
+                <th>Data</th>
+              </tr>
+            </thead>
+            <tbody>
+              {this.state.activeDeviceDisplayed.data.splice(length - amount, length).map(this.getRowHTML)}
+            </tbody>
+          </table>
+        </div>
+      );
+    }
+
+
     return (
       <div className="row">
         <div className="eight wide column">
@@ -56,16 +104,9 @@ export default class Dashboard extends Component {
           </div>
         </div>
         <div className="eight wide column">
-          <div className="ui grid">
             <div className="needs-padding">
-              <div className="ui stacked segment">
-                <h4 className="ui header">A header</h4>
-                <p>Te eum doming eirmod, nominati pertinacia argumentum ad his. Ex eam alia facete scriptorem, est autem aliquip detraxit at. Usu ocurreret referrentur at, cu epicurei appellantur vix. Cum ea laoreet recteque electram, eos choro alterum definiebas in. Vim dolorum definiebas an. Mei ex natum rebum iisque.</p>
-                 <p>Audiam quaerendum eu sea, pro omittam definiebas ex. Te est latine definitiones. Quot wisi nulla ex duo. Vis sint solet expetenda ne, his te phaedrum referrentur consectetuer. Id vix fabulas oporteat, ei quo vide phaedrum, vim vivendum maiestatis in.</p>
-                 <p>Eu quo homero blandit intellegebat. Incorrupte consequuntur mei id. Mei ut facer dolores adolescens, no illum aperiri quo, usu odio brute at. Qui te porro electram, ea dico facete utroque quo. Populo quodsi te eam, wisi everti eos ex, eum elitr altera utamur at. Quodsi convenire mnesarchum eu per, quas minimum postulant per id.</p>
-              </div>
+              { device }
             </div>
-          </div>
         </div>
       </div>
     );
