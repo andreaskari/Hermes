@@ -13,30 +13,39 @@ export default class ShoppingCart extends Component {
     super(props);
 
     this.state = {
-      activeDeviceDisplayed: props.activeDeviceDisplayed,
+      // activeDeviceDisplayed: props.activeDeviceDisplayed,
     };
   }
 
   componentWillReceiveProps(nextProps) {
     this.setState({
-      activeDeviceDisplayed: nextProps.activeDeviceDisplayed,
+      // activeDeviceDisplayed: nextProps.activeDeviceDisplayed,
     });
   }
 
-  getDeviceRowHTML(device) {
-    var onClick = () => {
-      this.props.setActiveDeviceDisplayed(device);
-    };
+  getItemRowHTML(item) {
+    // var onClick = () => {
+    //   this.props.setActiveDeviceDisplayed(device);
+    // };
 
     return (
-      <div className="sixteen wide column" key={device} onClick={onClick}>
-        <div className="ui icon message">
-          <i className="green circle icon"></i>
+      <div className="sixteen wide column">
+        <div className="ui info message" key={item.name}>
           <div className="content">
-            <div className="header">
-              { device }
+            <div className="ui grid">
+              <div className="ui ten wide column">
+                <p>{item.name}</p>
+                <div className="ui sub header">Item Name</div>
+              </div>
+              <div className="ui three wide column">
+                <p>{item.quantity}</p>
+                <div className="ui sub header">Quantity</div>
+              </div>
+              <div className="ui three wide column">
+                <p>{item.price}</p>
+                <div className="ui sub header">Price</div>
+              </div>
             </div>
-            <p>Status: Active</p>
           </div>
         </div>
       </div>
@@ -49,7 +58,7 @@ export default class ShoppingCart extends Component {
     return (
       <div className="sixteen wide column">
         <div className="ui grid">
-          { DEVICES.map(this.getDeviceRowHTML.bind(this)) }
+          { ITEMS.map(this.getItemRowHTML.bind(this)) }
         </div>
       </div>
     );

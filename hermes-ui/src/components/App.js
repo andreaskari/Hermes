@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 
 import MenuBar from './MenuBar';
 import Dashboard from './Dashboard';
+import ShoppingCart from './ShoppingCart';
 import RecorderBox from './RecorderBox';
 import '../css/App.css';
 
@@ -49,7 +50,9 @@ class App extends Component {
 
   render() {
     var contentHTML = (
-      <p>The creators of this program are Andre Askarinam, Rami Shahatit & Parsa Attari</p>
+      <p className="centered">
+        The creators of this program are Andre Askarinam, Rami Shahatit & Parsa Attari
+      </p>
     );
     if (this.state.activeMenuOption === 'Dashboard') {
       contentHTML = (
@@ -62,12 +65,7 @@ class App extends Component {
       );
     } else if (this.state.activeMenuOption === 'Shopping Cart') {
       contentHTML = (
-        <Dashboard 
-          activeDeviceDisplayed={this.state.activeDeviceDisplayed}
-          setActiveDeviceDisplayed={(device) => {
-            this.setState({activeDeviceDisplayed: device});
-          }}
-        />
+        <ShoppingCart />
       );
     } 
 
