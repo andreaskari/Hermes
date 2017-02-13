@@ -7,6 +7,7 @@
   },
   "dependencies": {
     "chart.js": "^2.5.0",
+    "fs": "0.0.1-security",
     "popsicle": "^9.1.0",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",

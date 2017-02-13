@@ -79,6 +79,15 @@ class App extends Component {
   sendAudioRecordingRequest(blob) {
     console.log(blob);
 
+    // var fs = require('fs');
+    // fs.writeFile("./json/blob", JSON.stringify(blob), function(err) {
+    //     if(err) {
+    //         return console.log(err);
+    //     }
+
+    //     console.log("The file was saved!");
+    // }); 
+
     var method = "POST";
     var url = "http://127.0.0.1:5000/postAudio/";
     var body = {blob: blob};
@@ -89,6 +98,40 @@ class App extends Component {
       // this.setState({: JSON.parse(res.body)});
     };
     this.makeAPICallWithCallback(method, url, body, headers, callBack);
+
+    var method = "POST";
+    var url = "http://127.0.0.1:9091/ops/transfers/";
+    var body = {
+      "direction": "send",              //Required: yes, Values: 'send' for uploads or 'receive' for downloads
+      "remote_host": "localhost",       //Required: yes
+      "remote_access_key": "h-AC3XuMc8NrG5JPATftC0EpnLe0r7GED_mVJU017II", //Required: no
+      "token": "Basic aC1BQzNYdU1jOE5yRzVKUEFUZnRDMEVwbkxlMHI3R0VEX21WSlUwMTdJSTphc3BlcmE=",         //Required: yes, Values: "Bearer xyz" or "Basic xyz" or traditional ATM_* token
+      "source_root_id": "1",            //Required: yes when using bearer or basic token, no otherwise
+      "destination_root_id": "1",       //Required: yes when using bearer or basic token, no otherwise
+      "ssh_port": "33001",              //Required: no, Default: 33001
+      "fasp_port": "33001",             //Required: no, Default: 33001
+      "remote_user": "xfer",            //Required: no, Default: xfer
+      "remote_password": "xxx",         //Required: no, Available since version 3.6.1. When not specified, key-based authentication is implicitly done.
+      "multi_session": "1",             //Required: no, Default: 1
+      "delete_source": "true",          //Required: no, Default: false; This parameter removes all source files (removes all source files, empty directories and source argument itself)
+      "paths": [                        //Required: yes
+        {
+          "source": "x3"
+        }
+      ]
+    };
+    var headers = {
+      Authorization: "Basic aC1BQzNYdU1jOE5yRzVKUEFUZnRDMEVwbkxlMHI3R0VEX21WSlUwMTdJSTphc3BlcmE=",
+    };
+    var callBack = (res) => {
+      console.log("received from sendAudioRecordingRequest()");  
+      console.log(res.body);   
+      // this.setState({: JSON.parse(res.body)});
+    };
+    this.makeAPICallWithCallback(method, url, body, headers, callBack);
+
+    
+
   }
 
   render() {

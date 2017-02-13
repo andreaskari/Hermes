@@ -31,6 +31,7 @@ def reset_state():
         ],
         "shoppingcart": [],
         "addedFilament": False,
+        "firstCommand": True,
     }
     save_obj(state)
 
@@ -80,6 +81,7 @@ def get_all_info():
 def post_audio():
     content = request.get_json(silent=True)
     print(content)
+    state = load_obj()
     
     objectList = ['refrigerator', 'printer', 'coffee']
     commandList = ['status', 'buy', 'purchase', 'order', 'add', 'cart']
@@ -98,7 +100,11 @@ def post_audio():
 
     print(json.dumps(speech_to_text.get_model('en-US_BroadbandModel'), indent=2))
 
-    with open(join(dirname(__file__), '/Users/andreaskarinam/Desktop/response.wav'), 'rb') as audio_file:
+    path = '/Users/andreaskarinam/Developer/React/Hermes/samples/response2.wav'
+    if state["firstCommand"] == True:
+        path = '/Users/andreaskarinam/Developer/React/Hermes/samples/response3.wav'
+
+    with open(join(dirname(__file__), path), 'rb') as audio_file:
         text_dict = speech_to_text.recognize(
             audio_file, content_type='audio/wav', timestamps=True,
             word_confidence=True)
@@ -115,9 +121,13 @@ def post_audio():
         if(word in objectList):
             print(word)
 
-    state = load_obj()
-    data = state["devices"][0]["data"]
-    state["shoppingcart"] = []
+    print(state["firstCommand"])
+    if state["firstCommand"] == True:
+        state["firstCommand"] = False
+        state["shoppingcart"].append({"name": "Maui Coffee", "quantity": 1, "price": "$12.99"})
+    else:
+        data = state["devices"][0]["data"]
+        state["shoppingcart"] = []
     save_obj(state)
     return json.dumps({"response": 200})
 
