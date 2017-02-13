@@ -24,19 +24,23 @@ Thus the shopping cart becomes empty.
 
 ## Usage
 
-You must run the Flask API and the node app separately (both running by default on different ports). The Flask API requires packages help by pip in the virtual environment provided.
+You must run the Flask API and the node app separately (both running by default on different ports). The Flask API requires packages from pip (use virtualenv to install them via pip).
 
 Flask API:
 ```
-$ source pixels-env/bin/activate
-$ cd flask-api/
+$ virtualenv flask-env
+$ source flask-env/bin/activate
+$ pip install flask
+$ pip install flask-cors
+
+$ cd hermes-api/
 $ python api.py
 * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
 ```
 
 Node App:
 ```
-$ cd pixels-ui/
+$ cd hermes-ui/
 $ npm start
 ```
 
